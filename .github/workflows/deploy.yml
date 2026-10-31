@@ -66,9 +66,11 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.IMAGE }}:${{ github.sha }}
-          env_vars: PROJECT=${{ env.PROJECT_ID }},MODEL=openai/gpt-oss-120b-maas
+          env_vars: PROJECT=${{ env.PROJECT_ID }},MODEL=openai/gpt-oss-120b-maas,ARTIFACT_BUCKET=${{ env.PROJECT_ID }}-chat2z-artifacts
           # MCP_SERVERS (may contain auth headers) comes from Secret Manager at runtime, never from the repo.
-          secrets: MCP_SERVERS=mcp-servers:latest
+          # DATABASE_URL is the restricted chat2z_app role (scripts/setup_infra.sh), not the shared superuser.
+          secrets: |
+            DATABASE_URL=chat2z-database-url:latest
 
       - if: github.ref == 'refs/heads/main'
         run: echo "Deployed ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"

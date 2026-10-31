@@ -17,16 +17,37 @@
     --navy: #1b2a4a;
     --navy-soft: #5b6985;
     --red: #a63a3a;
+    --green: #3f7d5a;
     --col: 740px;
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; }
   body { margin: 0; display: flex; font-family: Arial, sans-serif; font-size: 15px; background: var(--cream); color: var(--navy); }
-  button { font: inherit; color: inherit; }
+  button, input, select { font: inherit; color: inherit; }
+  [hidden] { display: none !important; }
   .icon-btn { border: 0; background: none; cursor: pointer; padding: 6px 8px; border-radius: 8px; color: var(--navy-soft); }
   .icon-btn:hover { background: var(--cream-dark); color: var(--navy); }
+  .btn { padding: 9px 16px; border: 1px solid var(--navy); border-radius: 10px; background: var(--navy); color: var(--cream); cursor: pointer; font-weight: bold; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .btn.ghost { background: none; color: var(--navy); border-color: var(--cream-line); font-weight: normal; }
+  .btn.ghost:hover { background: var(--cream-dark); }
+  .btn.small { padding: 5px 10px; font-size: 13px; }
+  .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; font-size: 13px; color: var(--navy-soft); }
+  .field input, .field select { padding: 10px 12px; border: 1px solid var(--cream-line); border-radius: 10px; background: var(--paper); font-size: 15px; color: var(--navy); outline: 0; }
+  .field input:focus, .field select:focus { border-color: var(--navy-soft); }
+  .msg-error { color: var(--red); font-size: 13px; min-height: 18px; margin: 0 0 10px; overflow-wrap: anywhere; }
 
-  /* ---- sidebar ---- */
+  /* ---- login ---- */
+  #login { flex: 1; display: grid; place-items: center; padding: 20px; }
+  #login form { width: 100%; max-width: 340px; text-align: center; }
+  #login .mark { width: 52px; height: 52px; margin: 0 auto 16px; border-radius: 14px; background: var(--navy); color: var(--cream); font: bold 24px Arial, sans-serif; display: grid; place-items: center; }
+  #login h1 { font: 30px Georgia, 'Times New Roman', serif; margin: 0 0 24px; font-weight: normal; }
+  #login .field { text-align: left; }
+  #login .btn { width: 100%; padding: 11px; }
+
+  /* ---- app shell ---- */
+  #app { flex: 1; display: flex; min-width: 0; }
+
   aside { width: 272px; flex-shrink: 0; display: flex; flex-direction: column; padding: 12px 10px; background: var(--cream-dark); border-right: 1px solid var(--cream-line); }
   .logo { font-weight: bold; font-size: 26px; padding: 6px 10px 14px; letter-spacing: -0.5px; }
   #new { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border: 0; border-radius: 10px; background: none; cursor: pointer; font-weight: bold; }
@@ -43,12 +64,20 @@
   .item button:hover { color: var(--navy); }
   .empty-note { padding: 8px 10px; font-size: 13px; color: var(--navy-soft); }
 
-  /* ---- main ---- */
+  #account { position: relative; border-top: 1px solid var(--cream-line); padding-top: 10px; margin-top: 8px; }
+  #account-btn { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px; border: 0; border-radius: 10px; background: none; cursor: pointer; text-align: left; }
+  #account-btn:hover { background: rgba(27, 42, 74, 0.07); }
+  #avatar { width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; background: var(--navy); color: var(--cream); display: grid; place-items: center; font-size: 13px; font-weight: bold; text-transform: uppercase; }
+  #account-name { flex: 1; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #account-menu { position: absolute; bottom: calc(100% - 4px); left: 0; right: 0; padding: 6px; background: var(--paper); border: 1px solid var(--cream-line); border-radius: 12px; box-shadow: 0 8px 24px rgba(27, 42, 74, 0.14); }
+  #account-menu button { display: block; width: 100%; padding: 9px 12px; border: 0; border-radius: 8px; background: none; text-align: left; cursor: pointer; }
+  #account-menu button:hover { background: var(--cream-dark); }
+
   main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   header { display: flex; align-items: center; gap: 8px; padding: 10px 16px; flex-shrink: 0; }
   #menu-btn { display: none; font-size: 20px; }
   .picker { position: relative; }
-  #picker-btn { max-width: 60vw; display: flex; align-items: center; gap: 6px; padding: 7px 10px; border: 0; border-radius: 10px; background: none; cursor: pointer; font-size: 16px; }
+  #picker-btn { display: flex; align-items: center; gap: 6px; max-width: 60vw; padding: 7px 10px; border: 0; border-radius: 10px; background: none; cursor: pointer; font-size: 16px; }
   #picker-btn:hover, #picker-btn.open { background: var(--cream-dark); }
   #picker-btn .chev { font-size: 10px; color: var(--navy-soft); }
   #picker-menu { display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 10; width: 300px; max-width: calc(100vw - 32px); padding: 6px; background: var(--paper); border: 1px solid var(--cream-line); border-radius: 14px; box-shadow: 0 8px 24px rgba(27, 42, 74, 0.14); }
@@ -89,7 +118,8 @@
   .md pre { max-width: 100%; background: var(--paper); border: 1px solid var(--cream-line); padding: 12px 14px; border-radius: 10px; overflow-x: auto; }
   .md pre code { background: none; padding: 0; }
   .md table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
-  .md img { max-width: 100%; height: auto; } .md th, .md td { border: 1px solid var(--cream-line); padding: 6px 10px; }
+  .md img { max-width: 100%; height: auto; }
+  .md th, .md td { border: 1px solid var(--cream-line); padding: 6px 10px; }
   .md a { color: var(--navy); }
   .typing { display: inline-flex; gap: 4px; padding: 6px 0; }
   .typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-soft); animation: blink 1.2s infinite; }
@@ -99,12 +129,13 @@
   .tool span:last-child { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tool .dot { flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--navy-soft); }
   .tool.running .dot { animation: blink 1s infinite; }
-  .tool.done .dot { background: #3f7d5a; } .tool.error .dot { background: var(--red); }
+  .tool.done .dot { background: var(--green); } .tool.error .dot { background: var(--red); }
   .card { display: flex; align-items: center; gap: 12px; align-self: flex-start; width: 320px; max-width: 100%; padding: 12px 14px; border: 1px solid var(--cream-line); border-radius: 14px; background: var(--paper); cursor: pointer; text-align: left; }
   .card:hover, .card.active { border-color: var(--navy); }
   .card .glyph { flex-shrink: 0; width: 48px; height: 36px; padding: 0 6px; border-radius: 9px; background: var(--cream-dark); display: grid; place-items: center; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: .3px; }
   .card .meta { flex: 1; min-width: 0; }
-  .card .t { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .card .k { font-size: 12px; color: var(--navy-soft); text-transform: capitalize; }
+  .card .t { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card .k { font-size: 12px; color: var(--navy-soft); text-transform: capitalize; }
   .err { color: var(--red); font-size: 14px; overflow-wrap: anywhere; }
 
   /* ---- artifact panel ---- */
@@ -120,63 +151,115 @@
   .grid th, .grid td { border-bottom: 1px solid var(--cream-line); padding: 7px 10px; text-align: left; white-space: nowrap; }
   .grid th { position: sticky; top: -18px; background: var(--paper); }
 
+  /* ---- modal ---- */
+  #modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(27, 42, 74, 0.35); }
+  #modal-card { width: 100%; max-width: 560px; max-height: 90vh; overflow: auto; padding: 22px; background: var(--cream); border: 1px solid var(--cream-line); border-radius: 16px; box-shadow: 0 16px 48px rgba(27, 42, 74, 0.25); }
+  #modal-card h2 { margin: 0 0 16px; font: 22px Georgia, 'Times New Roman', serif; font-weight: normal; display: flex; align-items: center; justify-content: space-between; }
+  .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+  .users { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 18px; }
+  .users td, .users th { padding: 8px 6px; border-bottom: 1px solid var(--cream-line); text-align: left; vertical-align: middle; }
+  .users .name { overflow-wrap: anywhere; }
+  .users .sub { color: var(--navy-soft); font-size: 12px; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--cream-darker); font-size: 11px; }
+  .tag.off { background: #ecd0d0; color: var(--red); }
+  .reveal { padding: 12px; margin-bottom: 14px; border: 1px dashed var(--navy-soft); border-radius: 10px; background: var(--paper); font-size: 13px; overflow-wrap: anywhere; }
+  .reveal code { display: block; margin-top: 6px; padding: 6px 8px; background: var(--cream-dark); border-radius: 6px; font-size: 14px; user-select: all; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
   @media (max-width: 860px) {
     aside { position: fixed; z-index: 20; inset: 0 auto 0 0; transform: translateX(-100%); transition: transform .2s; }
     aside.open { transform: none; box-shadow: 0 0 40px rgba(27, 42, 74, 0.25); }
     #menu-btn { display: block; }
     #greeting { font-size: 26px; }
     #panel { position: fixed; z-index: 15; inset: 0; width: auto; }
+    .row2 { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
-<aside id="side">
-  <div class="logo">2z</div>
-  <button id="new"><span class="plus">+</span>New chat</button>
-  <div class="label">Recents</div>
-  <div id="recents"></div>
-</aside>
 
-<main>
-  <header>
-    <button id="menu-btn" class="icon-btn" aria-label="Menu">&#9776;</button>
-    <div class="picker">
-      <button id="picker-btn"><span id="picker-name"></span><span class="chev">&#9660;</span></button>
-      <div id="picker-menu"></div>
-    </div>
-  </header>
-  <div id="stage" class="empty">
-    <div id="scroll"><div id="thread"></div></div>
-    <div id="dock">
-      <div id="greeting"><div class="mark">2z</div><div id="greeting-text"></div></div>
-      <form id="composer">
-        <textarea id="input" rows="1" autofocus></textarea>
-        <button id="send" type="submit" aria-label="Send"></button>
-      </form>
-      <div class="fine">AI can make mistakes. Check important information.</div>
-    </div>
-  </div>
-</main>
-
-<section id="panel">
-  <div id="panel-head">
-    <div id="panel-title"></div>
-    <button class="icon-btn" id="panel-copy" title="Copy">Copy</button>
-    <button class="icon-btn" id="panel-dl" title="Download">Download</button>
-    <button class="icon-btn" id="panel-close" title="Close">&#10005;</button>
-  </div>
-  <div id="panel-body"></div>
+<section id="login" hidden>
+  <form id="login-form" autocomplete="on">
+    <div class="mark">2z</div>
+    <h1>Sign in</h1>
+    <label class="field">Username<input id="login-user" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+    <label class="field">Password<input id="login-pass" name="password" type="password" autocomplete="current-password" required></label>
+    <p class="msg-error" id="login-error"></p>
+    <button class="btn" id="login-btn" type="submit">Sign in</button>
+  </form>
 </section>
 
+<div id="app" hidden>
+  <aside id="side">
+    <div class="logo">2z</div>
+    <button id="new"><span class="plus">+</span>New chat</button>
+    <div class="label">Recents</div>
+    <div id="recents"></div>
+    <div id="account">
+      <div id="account-menu" hidden>
+        <button id="menu-password">Change password</button>
+        <button id="menu-admin" hidden>Manage users</button>
+        <button id="menu-logout">Sign out</button>
+      </div>
+      <button id="account-btn"><span id="avatar"></span><span id="account-name"></span></button>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <button id="menu-btn" class="icon-btn" aria-label="Menu">&#9776;</button>
+      <div class="picker">
+        <button id="picker-btn"><span id="picker-name"></span><span class="chev">&#9660;</span></button>
+        <div id="picker-menu"></div>
+      </div>
+    </header>
+    <div id="stage" class="empty">
+      <div id="scroll"><div id="thread"></div></div>
+      <div id="dock">
+        <div id="greeting"><div class="mark">2z</div><div id="greeting-text"></div></div>
+        <form id="composer">
+          <textarea id="input" rows="1" maxlength="8000"></textarea>
+          <button id="send" type="submit" aria-label="Send"></button>
+        </form>
+        <div class="fine">AI can make mistakes. Check important information.</div>
+      </div>
+    </div>
+  </main>
+
+  <section id="panel">
+    <div id="panel-head">
+      <div id="panel-title"></div>
+      <button class="icon-btn" id="panel-copy" title="Copy">Copy</button>
+      <button class="icon-btn" id="panel-dl" title="Download">Download</button>
+      <button class="icon-btn" id="panel-close" title="Close">&#10005;</button>
+    </div>
+    <div id="panel-body"></div>
+  </section>
+</div>
+
+<div id="modal" hidden><div id="modal-card"></div></div>
+
 <script>
-(async () => {
-  const KEY = 'chat2z.chats';
+(() => {
   const $ = id => document.getElementById(id);
   const ARROW = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg>';
   const STOP = '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect width="12" height="12" rx="2"/></svg>';
 
-  const bots = await (await fetch('/api/bots')).json();
-  const botById = id => bots.find(b => b.id === id) || bots[0];
+  /* ================= api ================= */
+  class ApiError extends Error { constructor(status, message) { super(message); this.status = status; } }
+  async function api(path, { method = 'GET', body, signal } = {}) {
+    const r = await fetch(path, {
+      method, signal, headers: body ? { 'Content-Type': 'application/json' } : {},
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (r.status === 401 && path !== '/api/auth/login') { showLogin(); throw new ApiError(401, 'Signed out'); }
+    if (!r.ok) {
+      let detail = `Request failed (${r.status})`;
+      try { const j = await r.json(); if (typeof j.detail === 'string') detail = j.detail; else if (j.detail?.[0]?.msg) detail = j.detail[0].msg; } catch {}
+      throw new ApiError(r.status, detail);
+    }
+    return r.json();
+  }
 
   /* ================= artifact renderers =================
      To support a new artifact kind, add one entry: (host element, artifact) => void.
@@ -198,10 +281,7 @@
     if (cell || row.length) { row.push(cell); rows.push(row); }
     return rows;
   };
-  const tableOf = a => {
-    if (a.content && a.content.columns) return [a.content.columns, ...a.content.rows];
-    return parseCsv(String(a.content || ''));
-  };
+  const tableOf = a => a.content && a.content.columns ? [a.content.columns, ...a.content.rows] : parseCsv(String(a.content || ''));
   const renderers = {
     markdown: (host, a) => { host.innerHTML = `<div class="md">${md(a.content)}</div>`; },
     html: (host, a) => {
@@ -220,9 +300,7 @@
     },
     chart: async (host, a) => {
       host.textContent = 'Loading chart…';
-      if (!window.vegaEmbed) {
-        for (const s of ['vega@5', 'vega-lite@5', 'vega-embed@6']) await loadScript(`https://cdn.jsdelivr.net/npm/${s}`);
-      }
+      if (!window.vegaEmbed) for (const s of ['vega@5', 'vega-lite@5', 'vega-embed@6']) await loadScript(`https://cdn.jsdelivr.net/npm/${s}`);
       host.textContent = '';
       host.style.cssText = 'display:block;width:100%;';  // vega-embed makes its host inline-block, which collapses width:'container'
       await vegaEmbed(host, { width: 'container', ...a.content }, { actions: { export: true, source: false, compiled: false, editor: false } });
@@ -234,17 +312,138 @@
   const GLYPH = { markdown: 'MD', html: 'HTML', table: 'CSV', chart: 'Chart', image: 'Img', code: '</>' };
 
   /* ================= state ================= */
-  let chats = JSON.parse(localStorage.getItem(KEY) || '[]').filter(c => c.artifacts && c.messages.every(m => m.parts));
-  let current = null, abort = null, streaming = false, openArtifactId = null;
-  const save = () => {
-    try { localStorage.setItem(KEY, JSON.stringify(chats)); }
-    catch { /* storage full: keep working in memory */ }
+  let me = null, bots = [], chats = [], current = null;   // current: {id, botId, messages, artifacts}
+  let abort = null, streaming = false, openArtifactId = null;
+  const artifactCache = {};                                // id -> {kind,title,content}
+  const botById = id => bots.find(b => b.id === id) || bots[0];
+
+  /* ================= auth views ================= */
+  function showLogin() {
+    if (abort) abort.abort();
+    me = null; current = null; closePanel(); hideModal();
+    $('app').hidden = true; $('login').hidden = false;
+    $('login-pass').value = ''; $('login-error').textContent = '';
+    $('login-user').focus();
+  }
+
+  $('login-form').onsubmit = async e => {
+    e.preventDefault();
+    $('login-btn').disabled = true; $('login-error').textContent = '';
+    try {
+      await api('/api/auth/login', { method: 'POST', body: { username: $('login-user').value, password: $('login-pass').value } });
+      await boot();
+    } catch (err) { $('login-error').textContent = err.message; }
+    finally { $('login-btn').disabled = false; }
   };
+
+  async function boot() {
+    try { me = await api('/api/auth/me'); } catch { return; }
+    bots = await api('/api/bots');
+    $('login').hidden = true; $('app').hidden = false;
+    $('avatar').textContent = (me.display_name || me.username)[0];
+    $('account-name').textContent = me.display_name || me.username;
+    $('menu-admin').hidden = me.role !== 'admin';
+    chats = await api('/api/chats');
+    newChat(bots[0].id);
+    if (me.must_change_password) passwordModal(true);
+  }
+
+  /* ================= modal ================= */
+  function showModal(node) { const c = $('modal-card'); c.innerHTML = ''; c.append(node); $('modal').hidden = false; }
+  function hideModal() { $('modal').hidden = true; $('modal-card').innerHTML = ''; }
+  function el(html) { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
+
+  function passwordModal(forced) {
+    const n = el(`<div>
+      <h2>${forced ? 'Choose a new password' : 'Change password'}</h2>
+      ${forced ? '<p class="msg-error" style="color:var(--navy-soft)">Your password was set by an admin. Please pick your own before continuing.</p>' : ''}
+      <label class="field">Current password<input id="pw-cur" type="password" autocomplete="current-password"></label>
+      <label class="field">New password (10+ characters)<input id="pw-new" type="password" autocomplete="new-password"></label>
+      <p class="msg-error" id="pw-err"></p>
+      <div class="actions">${forced ? '' : '<button class="btn ghost" id="pw-cancel" type="button">Cancel</button>'}<button class="btn" id="pw-save" type="button">Save</button></div>
+    </div>`);
+    showModal(n);
+    if (!forced) n.querySelector('#pw-cancel').onclick = hideModal;
+    n.querySelector('#pw-save').onclick = async () => {
+      try {
+        await api('/api/auth/password', { method: 'POST', body: { current: n.querySelector('#pw-cur').value, new: n.querySelector('#pw-new').value } });
+        me.must_change_password = false; hideModal();
+      } catch (err) { n.querySelector('#pw-err').textContent = err.message; }
+    };
+  }
+
+  async function adminModal() {
+    const n = el(`<div>
+      <h2>Users <button class="icon-btn" id="ad-close" aria-label="Close">&#10005;</button></h2>
+      <div id="ad-reveal"></div>
+      <table class="users"><tbody id="ad-rows"></tbody></table>
+      <h2 style="font-size:17px">Add a user</h2>
+      <div class="row2">
+        <label class="field">Username<input id="ad-user" autocapitalize="none" spellcheck="false"></label>
+        <label class="field">Display name<input id="ad-name"></label>
+      </div>
+      <div class="row2">
+        <label class="field">Role<select id="ad-role"><option value="user">User</option><option value="admin">Admin</option></select></label>
+        <label class="field">Password (blank = generate)<input id="ad-pass" type="text" autocomplete="off"></label>
+      </div>
+      <p class="msg-error" id="ad-err"></p>
+      <div class="actions"><button class="btn" id="ad-add" type="button">Create user</button></div>
+    </div>`);
+    showModal(n);
+    n.querySelector('#ad-close').onclick = hideModal;
+    const reveal = (user, pw, what) => {
+      const r = el('<div class="reveal"></div>');
+      r.append(`${what} for `, Object.assign(document.createElement('b'), { textContent: user }), '. Shown once, copy it now:');
+      r.append(Object.assign(document.createElement('code'), { textContent: pw }));
+      n.querySelector('#ad-reveal').replaceChildren(r);
+    };
+    async function refresh() {
+      const users = await api('/api/admin/users');
+      const body = n.querySelector('#ad-rows'); body.innerHTML = '';
+      for (const u of users) {
+        const tr = document.createElement('tr');
+        const who = document.createElement('td'); who.className = 'name';
+        who.append(Object.assign(document.createElement('div'), { textContent: u.display_name }));
+        who.append(Object.assign(document.createElement('div'), { className: 'sub', textContent: '@' + u.username + (u.last_login_at ? ' · last in ' + new Date(u.last_login_at).toLocaleDateString() : ' · never signed in') }));
+        const tags = document.createElement('td');
+        tags.append(Object.assign(document.createElement('span'), { className: 'tag', textContent: u.role }), ' ');
+        if (!u.is_active) tags.append(Object.assign(document.createElement('span'), { className: 'tag off', textContent: 'disabled' }));
+        const act = document.createElement('td'); act.style.textAlign = 'right';
+        const mk = (label, fn) => { const b = Object.assign(document.createElement('button'), { className: 'btn ghost small', textContent: label }); b.onclick = fn; return b; };
+        const patch = async (body, what) => {
+          try { const r = await api(`/api/admin/users/${u.id}`, { method: 'PATCH', body }); if (r.password) reveal(u.username, r.password, what); await refresh(); }
+          catch (err) { n.querySelector('#ad-err').textContent = err.message; }
+        };
+        act.append(mk('Reset password', () => patch({ reset_password: true }, 'New temporary password')), ' ',
+                   mk(u.is_active ? 'Disable' : 'Enable', () => patch({ is_active: !u.is_active })));
+        tr.append(who, tags, act); body.append(tr);
+      }
+    }
+    n.querySelector('#ad-add').onclick = async () => {
+      n.querySelector('#ad-err').textContent = '';
+      try {
+        const r = await api('/api/admin/users', { method: 'POST', body: {
+          username: n.querySelector('#ad-user').value, display_name: n.querySelector('#ad-name').value,
+          role: n.querySelector('#ad-role').value, password: n.querySelector('#ad-pass').value || null } });
+        reveal(r.user.username, r.password, 'Temporary password');
+        ['#ad-user', '#ad-name', '#ad-pass'].forEach(s => n.querySelector(s).value = '');
+        await refresh();
+      } catch (err) { n.querySelector('#ad-err').textContent = err.message; }
+    };
+    await refresh();
+  }
+
+  /* ================= account menu ================= */
+  $('account-btn').onclick = e => { e.stopPropagation(); $('account-menu').hidden = !$('account-menu').hidden; };
+  document.addEventListener('click', () => { $('account-menu').hidden = true; closePicker(); });
+  $('menu-password').onclick = () => passwordModal(false);
+  $('menu-admin').onclick = adminModal;
+  $('menu-logout').onclick = async () => { try { await api('/api/auth/logout', { method: 'POST' }); } catch {} showLogin(); };
+  $('modal').addEventListener('mousedown', e => { if (e.target === $('modal') && !(me && me.must_change_password)) hideModal(); });
 
   /* ================= sidebar + picker ================= */
   function renderRecents() {
-    const box = $('recents');
-    box.innerHTML = '';
+    const box = $('recents'); box.innerHTML = '';
     if (!chats.length) { box.innerHTML = '<div class="empty-note">No previous chats</div>'; return; }
     for (const chat of chats) {
       const row = document.createElement('div');
@@ -252,16 +451,17 @@
       const title = document.createElement('span'); title.textContent = chat.title;
       const del = document.createElement('button'); del.textContent = '×'; del.title = 'Delete chat';
       del.onclick = e => { e.stopPropagation(); removeChat(chat.id); };
-      row.onclick = () => { openChat(chat); $('side').classList.remove('open'); };
-      row.append(title, del);
-      box.append(row);
+      row.onclick = () => { openChat(chat.id); $('side').classList.remove('open'); };
+      row.append(title, del); box.append(row);
     }
   }
-  function removeChat(id) {
+  async function removeChat(id) {
+    try { await api(`/api/chats/${id}`, { method: 'DELETE' }); } catch (err) { if (err.status !== 404) return; }
     chats = chats.filter(c => c.id !== id);
-    save();
     if (current && current.id === id) newChat(current.botId); else renderRecents();
   }
+  async function refreshChats() { try { chats = await api('/api/chats'); renderRecents(); } catch {} }
+
   function renderPicker() {
     $('picker-name').textContent = botById(current.botId).name;
     const menu = $('picker-menu'); menu.innerHTML = '';
@@ -277,7 +477,6 @@
   }
   const closePicker = () => { $('picker-menu').classList.remove('open'); $('picker-btn').classList.remove('open'); };
   $('picker-btn').onclick = e => { e.stopPropagation(); $('picker-menu').classList.toggle('open'); $('picker-btn').classList.toggle('open'); };
-  document.addEventListener('click', closePicker);
 
   /* ================= thread rendering ================= */
   function renderPart(p) {
@@ -293,7 +492,7 @@
       const b = document.createElement('button'); b.className = 'card' + (p.id === openArtifactId ? ' active' : '');
       b.innerHTML = '<div class="glyph"></div><div class="meta"><div class="t"></div><div class="k"></div></div>';
       b.querySelector('.glyph').textContent = GLYPH[a?.kind] || '□';
-      b.querySelector('.t').textContent = a?.title || 'Artifact';
+      b.querySelector('.t').textContent = a?.title || 'Artifact (unavailable)';
       b.querySelector('.k').textContent = a?.kind || '';
       b.onclick = () => openArtifact(p.id);
       return b;
@@ -304,6 +503,7 @@
   let raf = 0;
   const scheduleRender = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; renderThread(); }); };
   function renderThread() {
+    if (!current) return;
     const scroll = $('scroll');
     const stick = scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight < 80;
     const thread = $('thread'); thread.innerHTML = '';
@@ -323,23 +523,25 @@
 
   /* ================= artifact panel ================= */
   async function openArtifact(id) {
-    const a = current.artifacts[id]; if (!a) return;
+    if (!current.artifacts[id]) return;
     openArtifactId = id;
-    $('panel-title').textContent = a.title;
-    // Each open renders into its own host; a slow render for a previous artifact lands in a detached node.
     const host = document.createElement('div');
     const body = $('panel-body'); body.innerHTML = ''; body.append(host);
+    $('panel-title').textContent = current.artifacts[id].title;
     document.body.classList.add('panel-open');
     renderThread();
-    try { await (renderers[a.kind] || renderers.code)(host, a); }
-    catch (e) { host.textContent = 'Could not render this artifact.'; }
+    try {
+      if (!artifactCache[id]) { host.textContent = 'Loading…'; artifactCache[id] = await api(`/api/artifacts/${id}`); host.textContent = ''; }
+      const a = artifactCache[id];
+      await (renderers[a.kind] || renderers.code)(host, a);
+    } catch (e) { host.textContent = 'Could not load this artifact.'; }
   }
   function closePanel() { openArtifactId = null; document.body.classList.remove('panel-open'); $('panel-body').innerHTML = ''; if (current) renderThread(); }
   $('panel-close').onclick = closePanel;
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
-  $('panel-copy').onclick = () => { const a = current.artifacts[openArtifactId]; if (a) navigator.clipboard.writeText(textOf(a)); };
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('modal').hidden && !(me && me.must_change_password)) hideModal(); else closePanel(); } });
+  $('panel-copy').onclick = () => { const a = artifactCache[openArtifactId]; if (a) navigator.clipboard.writeText(textOf(a)); };
   $('panel-dl').onclick = () => {
-    const a = current.artifacts[openArtifactId]; if (!a) return;
+    const a = artifactCache[openArtifactId]; if (!a) return;
     const link = document.createElement('a');
     link.href = a.kind === 'image' ? a.content : URL.createObjectURL(new Blob([textOf(a)]));
     link.download = `${a.title.replace(/[^\w.-]+/g, '_')}${/\.\w+$/.test(a.title) ? '' : '.' + (EXT[a.kind] || 'txt')}`;
@@ -348,14 +550,23 @@
 
   /* ================= chats ================= */
   function newChat(botId) {
-    openChat({ id: crypto.randomUUID(), botId, title: 'New chat', messages: [], artifacts: {}, updated: Date.now() });
-  }
-  function openChat(chat) {
     if (streaming && abort) abort.abort();
     closePanel();
-    current = chat;
-    $('greeting-text').textContent = `How can ${botById(chat.botId).name} help you today?`;
-    $('input').placeholder = `Message ${botById(chat.botId).name}`;
+    current = { id: crypto.randomUUID(), botId, messages: [], artifacts: {} };
+    afterOpen();
+  }
+  async function openChat(id) {
+    if (streaming && abort) abort.abort();
+    closePanel();
+    try {
+      const c = await api(`/api/chats/${id}`);
+      current = { id: c.id, botId: c.bot_id, messages: c.messages, artifacts: c.artifacts };
+      afterOpen();
+    } catch (err) { if (err.status === 404) { chats = chats.filter(x => x.id !== id); renderRecents(); } }
+  }
+  function afterOpen() {
+    $('greeting-text').textContent = `How can ${botById(current.botId).name} help you today?`;
+    $('input').placeholder = `Message ${botById(current.botId).name}`;
     renderPicker(); renderRecents(); renderThread(); setStreaming(false);
     $('input').focus();
   }
@@ -366,11 +577,7 @@
     $('send').disabled = !on && !$('input').value.trim();
   }
 
-  const historyForServer = () => current.messages
-    .map(m => ({ role: m.role, text: m.parts.filter(p => p.type === 'text').map(p => p.text).join('') }))
-    .filter(m => m.text);
-
-  function applyEvent(msg, ev) {
+  function applyEvent(chat, msg, ev) {
     const last = msg.parts[msg.parts.length - 1];
     if (ev.type === 'text') {
       if (last && last.type === 'text') last.text += ev.text; else msg.parts.push({ type: 'text', text: ev.text });
@@ -378,9 +585,10 @@
       const p = msg.parts.find(x => x.type === 'tool' && x.id === ev.id);
       if (p) p.status = ev.status; else msg.parts.push({ type: 'tool', id: ev.id, name: ev.name, status: ev.status });
     } else if (ev.type === 'artifact') {
-      current.artifacts[ev.id] = { id: ev.id, kind: ev.kind, title: ev.title, content: ev.content };
+      artifactCache[ev.id] = { id: ev.id, kind: ev.kind, title: ev.title, content: ev.content };
+      chat.artifacts[ev.id] = { id: ev.id, kind: ev.kind, title: ev.title };
       msg.parts.push({ type: 'artifact', id: ev.id });
-      if (!msg.opened) { msg.opened = true; openArtifact(ev.id); }
+      if (!msg.opened && current === chat) { msg.opened = true; openArtifact(ev.id); }
     } else if (ev.type === 'error') {
       msg.parts.push({ type: 'error', text: ev.error });
     }
@@ -391,17 +599,19 @@
     chat.messages.push({ role: 'user', parts: [{ type: 'text', text }] });
     const reply = { role: 'assistant', parts: [] };
     chat.messages.push(reply);
-    if (!chats.includes(chat)) chats.unshift(chat);
-    chat.title = chat.title === 'New chat' ? (text.length > 40 ? text.slice(0, 40) + '…' : text) : chat.title;
-    chat.updated = Date.now();
     abort = new AbortController();
-    setStreaming(true); renderThread(); renderRecents();
+    setStreaming(true); renderThread();
     try {
       const r = await fetch(`/api/chat/${chat.botId}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: abort.signal,
-        body: JSON.stringify({ messages: historyForServer() }),
+        body: JSON.stringify({ chat_id: chat.id, text }),
       });
-      if (!r.ok) throw new Error(r.status === 429 ? 'Too many requests, slow down.' : `Request failed (${r.status})`);
+      if (r.status === 401) { showLogin(); return; }
+      if (!r.ok) {
+        let d = `Request failed (${r.status})`;
+        try { const j = await r.json(); if (typeof j.detail === 'string') d = j.detail; else if (j.detail?.[0]?.msg) d = j.detail[0].msg; } catch {}
+        throw new Error(d);
+      }
       const reader = r.body.getReader(), dec = new TextDecoder();
       let buf = '';
       for (;;) {
@@ -411,7 +621,7 @@
         let i;
         while ((i = buf.indexOf('\n\n')) >= 0) {
           const chunk = buf.slice(0, i); buf = buf.slice(i + 2);
-          if (chunk.startsWith('data:')) applyEvent(reply, JSON.parse(chunk.slice(5)));
+          if (chunk.startsWith('data:')) applyEvent(chat, reply, JSON.parse(chunk.slice(5)));
         }
         if (current === chat) scheduleRender();
       }
@@ -420,10 +630,8 @@
     } finally {
       reply.parts.forEach(p => { if (p.type === 'tool' && p.status === 'running') p.status = 'error'; });
       if (!reply.parts.length) reply.parts.push({ type: 'text', text: '_(stopped)_' });
-      chat.updated = Date.now();
-      chats.sort((a, b) => b.updated - a.updated);
-      save();
-      if (current === chat) { setStreaming(false); renderThread(); renderRecents(); }
+      if (current === chat) { setStreaming(false); renderThread(); }
+      refreshChats();
     }
   }
 
@@ -445,9 +653,8 @@
   $('new').onclick = () => { newChat(current.botId); $('side').classList.remove('open'); };
   $('menu-btn').onclick = () => $('side').classList.toggle('open');
 
-  // Continue the most recent chat, or start fresh.
-  if (chats.length) { chats.sort((a, b) => b.updated - a.updated); openChat(chats[0]); }
-  else newChat(bots[0].id);
+  localStorage.removeItem('chat2z.chats');  // history used to live here; it is now server-side
+  api('/api/auth/me').then(boot, showLogin);
 })();
 </script>
 </body>

@@ -78,7 +78,7 @@ async def list_tools(allowed: list[str] | None = None) -> list[dict]:
 
 
 def _artifact(kind: str, title: str, content, **extra) -> dict:
-    return {"id": uuid.uuid4().hex[:12], "kind": kind, "title": title or kind.title(), "content": content, **extra}
+    return {"id": uuid.uuid4().hex[:20], "kind": kind, "title": title or kind.title(), "content": content, **extra}
 
 
 def _from_resource(res) -> dict | None:

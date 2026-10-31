@@ -4,3 +4,9 @@ httpx
 google-auth
 requests
 mcp>=1.2,<2
+psycopg[binary]>=3.2
+psycopg-pool>=3.2
+argon2-cffi>=23.1
+google-cloud-storage>=2.18
+langchain-core>=1.0
+langchain-openai>=1.0
