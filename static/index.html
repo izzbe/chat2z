@@ -76,6 +76,7 @@
   main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   header { display: flex; align-items: center; gap: 8px; padding: 10px 16px; flex-shrink: 0; }
   #menu-btn { display: none; font-size: 20px; }
+  #side-close, #backdrop { display: none; }
   .picker { position: relative; }
   #picker-btn { display: flex; align-items: center; gap: 6px; max-width: 60vw; padding: 7px 10px; border: 0; border-radius: 10px; background: none; cursor: pointer; font-size: 16px; }
   #picker-btn:hover, #picker-btn.open { background: var(--cream-dark); }
@@ -170,6 +171,9 @@
     aside { position: fixed; z-index: 20; inset: 0 auto 0 0; transform: translateX(-100%); transition: transform .2s; }
     aside.open { transform: none; box-shadow: 0 0 40px rgba(27, 42, 74, 0.25); }
     #menu-btn { display: block; }
+    #side-close { display: block; position: absolute; top: 8px; right: 8px; font-size: 22px; }
+    #backdrop { position: fixed; z-index: 19; inset: 0; background: rgba(27, 42, 74, 0.35); }
+    aside.open ~ #backdrop { display: block; }
     #greeting { font-size: 26px; }
     #panel { position: fixed; z-index: 15; inset: 0; width: auto; }
     .row2 { grid-template-columns: 1fr; }
@@ -191,6 +195,7 @@
 
 <div id="app" hidden>
   <aside id="side">
+    <button id="side-close" class="icon-btn" aria-label="Close menu">&times;</button>
     <div class="logo">2z</div>
     <button id="new"><span class="plus">+</span>New chat</button>
     <div class="label">Recents</div>
@@ -204,6 +209,7 @@
       <button id="account-btn"><span id="avatar"></span><span id="account-name"></span></button>
     </div>
   </aside>
+  <div id="backdrop"></div>
 
   <main>
     <header>
@@ -652,6 +658,7 @@
   };
   $('new').onclick = () => { newChat(current.botId); $('side').classList.remove('open'); };
   $('menu-btn').onclick = () => $('side').classList.toggle('open');
+  $('side-close').onclick = $('backdrop').onclick = () => $('side').classList.remove('open');
 
   localStorage.removeItem('chat2z.chats');  // history used to live here; it is now server-side
   api('/api/auth/me').then(boot, showLogin);
