@@ -67,6 +67,8 @@ jobs:
           region: ${{ env.REGION }}
           image: ${{ env.IMAGE }}:${{ github.sha }}
           env_vars: PROJECT=${{ env.PROJECT_ID }},MODEL=openai/gpt-oss-120b-maas
+          # MCP_SERVERS (may contain auth headers) comes from Secret Manager at runtime, never from the repo.
+          secrets: MCP_SERVERS=mcp-servers:latest
 
       - if: github.ref == 'refs/heads/main'
         run: echo "Deployed ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
