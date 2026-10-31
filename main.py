@@ -10,13 +10,13 @@ from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
-import agent
+import agents
 import artifacts as gcs
 import auth
 import db
 import settings
 import store
-from bots import BOTS
+from agents import AgentContext
 
 log = logging.getLogger("chat2z")
 STATIC = Path(__file__).parent / "static"
@@ -174,7 +174,7 @@ async def admin_update_user(user_id: uuid.UUID, body: UpdateUserIn, admin: dict 
 # ---------------- bots / chats ----------------
 @app.get("/api/bots")
 def bots(_: dict = Depends(auth.current_user)):
-    return [{"id": k, "name": v["name"], "description": v.get("description", "")} for k, v in BOTS.items()]
+    return [{"id": a.id, "name": a.name, "description": a.description} for a in agents.all_agents()]
 
 
 @app.get("/api/chats")
@@ -231,8 +231,8 @@ def sse(**kw) -> str:
 
 @app.post("/api/chat/{bot_id}")
 async def chat(bot_id: str, body: ChatIn, user: dict = Depends(auth.current_user)):
-    bot = BOTS.get(bot_id)
-    if bot is None:
+    agent = agents.get(bot_id)  # the URL/DB "bot_id" is the agent's id
+    if agent is None:
         raise HTTPException(404, "Unknown bot")
     chat_limiter.check(str(user["id"]))
     row = await store.ensure_chat(user["id"], body.chat_id, bot_id, body.text)
@@ -241,7 +241,10 @@ async def chat(bot_id: str, body: ChatIn, user: dict = Depends(auth.current_user
 
     prior = await store.history(row["id"], MAX_HISTORY)
     await store.add_message(row["id"], "user", [{"type": "text", "text": body.text}])
-    turns = [*prior, {"role": "user", "content": body.text}]
+    ctx = AgentContext(
+        messages=[*prior, {"role": "user", "content": body.text}],
+        user_id=str(user["id"]), username=user["username"], chat_id=str(row["id"]),
+    )
 
     async def events():
         parts: list[dict] = []
@@ -254,7 +257,7 @@ async def chat(bot_id: str, body: ChatIn, user: dict = Depends(auth.current_user
                 await store.add_message(row["id"], "assistant", parts)
 
         try:
-            async for ev in agent.run(bot, turns):
+            async for ev in agent.run(ctx):
                 kind = ev["type"]
                 if kind == "text":
                     if parts and parts[-1]["type"] == "text":

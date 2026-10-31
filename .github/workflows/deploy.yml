@@ -70,7 +70,6 @@ jobs:
           # MCP_SERVERS (may contain auth headers) comes from Secret Manager at runtime, never from the repo.
           # DATABASE_URL is the restricted chat2z_app role (scripts/setup_infra.sh), not the shared superuser.
           secrets: |
-            MCP_SERVERS=mcp-servers:latest
             DATABASE_URL=chat2z-database-url:latest
 
       - if: github.ref == 'refs/heads/main'

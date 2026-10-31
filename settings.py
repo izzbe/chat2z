@@ -12,3 +12,9 @@ COOKIE_SECURE = os.environ.get("COOKIE_SECURE", "1") != "0"  # set COOKIE_SECURE
 SESSION_DAYS = 14
 MAX_MESSAGE_CHARS = 8000
 MAX_ARTIFACT_BYTES = 20 * 1024 * 1024
+
+# Vertex AI (open models served through its OpenAI-compatible endpoint)
+VERTEX_PROJECT = os.environ.get("PROJECT", "")  # empty = whatever the ambient credentials belong to
+VERTEX_LOCATION = os.environ.get("LOCATION", "us-central1")
+DEFAULT_MODEL = os.environ.get("MODEL", "openai/gpt-oss-120b-maas")
+MAX_TOKENS = int(os.environ.get("MAX_TOKENS", "2048"))
