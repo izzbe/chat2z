@@ -1,0 +1,72 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A newer push to main supersedes an in-flight deploy; PR runs are cancelled per-branch.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROJECT_ID: meteo-512021
+  REGION: us-central1
+  SERVICE: chat2z
+  IMAGE: us-central1-docker.pkg.dev/meteo-512021/chat2z/chat2z
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: pytest -q
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # OIDC token for Workload Identity Federation (no stored keys)
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/889219118693/locations/global/workloadIdentityPools/github/providers/chat2z
+          service_account: chat2z-deployer@meteo-512021.iam.gserviceaccount.com
+
+      - uses: google-github-actions/setup-gcloud@v2
+      - run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          # PRs build (to catch Dockerfile breakage) but only main pushes and deploys.
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - if: github.ref == 'refs/heads/main'
+        uses: google-github-actions/deploy-cloudrun@v2
+        id: deploy
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE }}:${{ github.sha }}
+          env_vars: PROJECT=${{ env.PROJECT_ID }},MODEL=openai/gpt-oss-120b-maas
+
+      - if: github.ref == 'refs/heads/main'
+        run: echo "Deployed ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"

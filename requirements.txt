@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+httpx
+google-auth
+requests
+mcp>=1.2,<2
